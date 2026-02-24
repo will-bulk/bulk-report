@@ -1,55 +1,58 @@
-import Link from 'next/link';
-import { categories, articles } from '@/lib/articles';
-import NewsletterCTA from './NewsletterCTA';
+import Link from 'next/link'
+import { getTrendingArticles } from '@/data/articles'
+import { categoryMap } from '@/data/categories'
 
-export default function Sidebar({ excludeSlug }: { excludeSlug?: string }) {
-  const recent = articles.filter((a) => a.slug !== excludeSlug).slice(0, 5);
+export default function Sidebar() {
+  const trending = getTrendingArticles().slice(0, 5)
+
   return (
     <aside className="space-y-8">
-      <NewsletterCTA />
-      <div>
-        <h3 className="font-bold text-lg mb-4 border-b-2 border-brand-orange pb-2">Categories</h3>
-        <ul className="space-y-2">
-          {categories.map((c) => (
-            <li key={c.slug}>
-              <Link
-                href={`/category/${c.slug}`}
-                className="text-sm text-gray-600 hover:text-brand-orange transition-colors flex items-center gap-2"
-              >
-                <span className="w-2 h-2 rounded-full bg-brand-orange inline-block" />
-                {c.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+      {/* Trending */}
+      <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <h3 className="text-sm font-black uppercase tracking-wider text-navy mb-4 pb-3 border-b border-gray-100">
+          Trending Now
+        </h3>
+        <ol className="space-y-4">
+          {trending.map((article, i) => {
+            const cat = categoryMap[article.category]
+            return (
+              <li key={article.slug} className="flex gap-3">
+                <span className="text-3xl font-black text-gray-200 leading-none">{i + 1}</span>
+                <div className="flex-1 min-w-0">
+                  {cat && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: cat.color }}>
+                      {cat.name}
+                    </span>
+                  )}
+                  <Link href={`/articles/${article.slug}`} className="block text-sm font-semibold leading-tight hover:text-accent transition-colors line-clamp-2">
+                    {article.title}
+                  </Link>
+                </div>
+              </li>
+            )
+          })}
+        </ol>
       </div>
-      <div>
-        <h3 className="font-bold text-lg mb-4 border-b-2 border-brand-green pb-2">Recent Articles</h3>
-        <ul className="space-y-4">
-          {recent.map((a) => (
-            <li key={a.slug}>
-              <Link href={`/articles/${a.slug}`} className="group">
-                <h4 className="text-sm font-medium group-hover:text-brand-orange transition-colors leading-snug">
-                  {a.title}
-                </h4>
-                <span className="text-xs text-gray-400">{a.date}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+
+      {/* Newsletter Signup */}
+      <div className="bg-navy rounded-lg p-5 text-white">
+        <h3 className="font-bold text-lg mb-2">Stay Informed</h3>
+        <p className="text-sm text-gray-400 mb-4">Get the top bulk freight stories delivered to your inbox every morning.</p>
+        <input
+          type="email"
+          placeholder="Your email address"
+          className="w-full px-3 py-2.5 rounded text-sm bg-white/10 border border-white/20 text-white placeholder-gray-400 mb-3 focus:outline-none focus:border-accent"
+        />
+        <button className="w-full bg-accent hover:bg-blue-700 text-white text-sm font-semibold py-2.5 rounded transition-colors">
+          Subscribe Free
+        </button>
       </div>
-      <div className="bg-brand-green/10 border border-brand-green/30 rounded-xl p-5 text-center">
-        <p className="font-bold text-brand-green mb-2">Find Bulk Loads</p>
-        <p className="text-sm text-gray-600 mb-3">Connect with shippers and carriers on BulkLoads.com</p>
-        <a
-          href="https://bulkloads.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block px-5 py-2 bg-brand-green text-white rounded-lg font-semibold text-sm hover:bg-green-600 transition-colors"
-        >
-          Get Started Free
-        </a>
+
+      {/* Ad Placeholder */}
+      <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+        <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">Advertisement</p>
+        <p className="text-sm text-gray-400 mt-1">300×250</p>
       </div>
     </aside>
-  );
+  )
 }

@@ -5,12 +5,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          orange: '#E8A000',
-          green: '#4CAF50',
-          dark: '#1a1a2e',
-          darker: '#0f0f1a',
-        },
+        navy: '#1a1a2e',
+        'navy-dark': '#0f0f1a',
+        accent: '#2563eb',
+        'gray-alt': '#f5f5f5',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

@@ -1,64 +1,105 @@
-'use client';
-import Link from 'next/link';
-import { categories } from '@/lib/articles';
-import { useState } from 'react';
+'use client'
+
+import Link from 'next/link'
+import { useState } from 'react'
+import { Search, Menu, X } from 'lucide-react'
+
+const categories = [
+  { name: 'News', href: '/' },
+  { name: 'Markets', href: '/category/markets' },
+  { name: 'Trucking', href: '/category/trucking' },
+  { name: 'Technology', href: '/category/technology' },
+  { name: 'Regulations', href: '/category/regulations' },
+  { name: 'Insurance', href: '/category/insurance' },
+  { name: 'Opinion', href: '/category/opinion' },
+]
 
 export default function Header() {
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false)
+
   return (
-    <header className="bg-brand-darker text-white sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="text-2xl font-extrabold tracking-tight">
-              <span className="text-brand-orange">Bulk</span>
-              <span className="text-white">Report</span>
-            </span>
-            <span className="hidden sm:inline text-xs text-gray-400 border-l border-gray-600 pl-3">
-              by BulkLoads.com
-            </span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            {categories.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/category/${c.slug}`}
-                className="hover:text-brand-orange transition-colors"
-              >
-                {c.name}
-              </Link>
-            ))}
-          </nav>
-          <button
-            className="md:hidden p-2"
-            onClick={() => setOpen(!open)}
-            aria-label="Menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {open ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+    <header className="sticky top-0 z-50">
+      {/* Utility Bar */}
+      <div className="bg-navy-dark text-gray-400 text-xs">
+        <div className="max-w-7xl mx-auto px-4 py-1.5 flex justify-between items-center">
+          <div className="flex gap-4">
+            <span className="text-gray-500">A BulkLoads.com Publication</span>
+          </div>
+          <div className="hidden sm:flex gap-4">
+            <a href="https://bulkloads.com" className="hover:text-white transition-colors">BulkLoads.com</a>
+            <a href="#" className="hover:text-white transition-colors">BulkTMS</a>
+            <a href="#" className="hover:text-white transition-colors">Bulk Insurance</a>
+          </div>
         </div>
-        {open && (
-          <nav className="md:hidden pb-4 flex flex-col gap-3 text-sm font-medium">
-            {categories.map((c) => (
+      </div>
+
+      {/* Main Nav */}
+      <div className="bg-navy text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="bg-accent w-8 h-8 rounded flex items-center justify-center font-black text-sm">BR</div>
+              <span className="font-black text-xl tracking-tight">BULK REPORT</span>
+            </Link>
+
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-1">
+              {categories.map((cat) => (
+                <Link
+                  key={cat.name}
+                  href={cat.href}
+                  className="px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-3">
+              <button className="p-2 text-gray-300 hover:text-white transition-colors">
+                <Search className="w-5 h-5" />
+              </button>
               <Link
-                key={c.slug}
-                href={`/category/${c.slug}`}
-                className="hover:text-brand-orange transition-colors"
-                onClick={() => setOpen(false)}
+                href="/subscribe"
+                className="hidden sm:block bg-accent hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
               >
-                {c.name}
+                Subscribe
               </Link>
-            ))}
-          </nav>
+              <button
+                className="lg:hidden p-2 text-gray-300 hover:text-white"
+                onClick={() => setMobileOpen(!mobileOpen)}
+              >
+                {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileOpen && (
+          <div className="lg:hidden border-t border-white/10 pb-4">
+            <nav className="flex flex-col px-4 pt-2">
+              {categories.map((cat) => (
+                <Link
+                  key={cat.name}
+                  href={cat.href}
+                  className="py-2.5 text-sm font-medium text-gray-300 hover:text-white border-b border-white/5"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {cat.name}
+                </Link>
+              ))}
+              <Link
+                href="/subscribe"
+                className="mt-3 bg-accent hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded text-center transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                Subscribe Free
+              </Link>
+            </nav>
+          </div>
         )}
       </div>
-      <div className="h-1 bg-gradient-to-r from-brand-orange to-brand-green" />
     </header>
-  );
+  )
 }
